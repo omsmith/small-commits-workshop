@@ -42,6 +42,30 @@ Carl Pacey and Mark Tse
 
 # Exercise 1: Breaking up a pull request
 
+* The app currently supports a "get all users" route
+  * `small-commits-workshop/SmallCommitsWorkshop/Controllers/UsersController.cs`
+* The `users/bigpr` branch does the following:
+  * Adds GET single user
+  * Adds POST user, which creates or updates
+  * Adds DELETE user
+  * Adds an index on User.Id
+  * Adds a new property User.IsActive
+  * Refactors test (`AddUsers()` method)
+
+---
+
+# Exercise 1: Breaking up a pull request
+
+Tasks:
+1. Fork the repository (https://github.com/neverendingqs/small-commits-workshop)
+1. Using `users/bigpr`, break up the code into smaller commits
+    * You can view the changes at
+      https://github.com/neverendingqs/small-commits-workshop/pull/13
+1. For each commit, create a pull request onto `<user>/master`
+    * Either add Carl, Mark, or another person in the workshop as your reviewer
+1. Continue until your `<user>/master` branch is functionally similar to
+    `users/bigpr`
+
 ---
 
 # Exercise 2: Let's add a new feature
