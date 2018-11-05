@@ -198,6 +198,12 @@ How did that work out for you?
 
 ---
 
+class: center, middle
+
+# Feedback
+
+---
+
 # Appendix: How can I split this up?
 
 Questions to ask yourself (in no particular order):
