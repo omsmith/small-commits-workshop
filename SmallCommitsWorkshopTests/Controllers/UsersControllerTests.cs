@@ -43,14 +43,9 @@ namespace SmallCommitsWorkshopTests.Controllers {
 
 		[Test]
 		public async Task GetAll_ReturnsUsers() {
-			User[] users = new User[] {
-				new User() { Id = 42, UserName = "JaneSmith" },
-				new User() { Id = 156, UserName = "JoeSmith" },
-			};
-
 			using( HttpResponseMessage response = await m_client.GetAsync( "/api/users" ) ) {
 				CollectionAssert.AreEquivalent(
-					users.ToDictionary(
+					m_defaultUsers.ToDictionary(
 						user => user.Id,
 						user => new Dictionary<string, object>( 2 ) {
 							{ "id", user.Id },
