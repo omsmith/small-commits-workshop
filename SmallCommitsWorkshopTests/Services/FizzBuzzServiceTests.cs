@@ -6,45 +6,76 @@ namespace SmallCommitsWorkshopTests.Services {
 	internal sealed class FizzBuzzServiceTests {
 		private readonly IFizzBuzzService m_fizzBuzzService = new FizzBuzzService();
 
-		[TestCase( 1 )]
-		[TestCase( 2 )]
-		[TestCase( 13 )]
-		[TestCase( 9998 )]
-		public void Calculate_IsNotDivisibleBy3Or5( int number ) {
+		[Test]
+		public void Calculate_IsNotDivisibleBy3Or5(
+			[Values( 1, 2, 13, 9998 )] int number,
+			[Values( null, "cats" )] string fizz,
+			[Values( null, "dogs" )] string buzz
+		) {
 			Assert.AreEqual(
 				expected: number.ToString(),
-				actual: m_fizzBuzzService.Calculate( number: number )
+				actual: RunCalculate( number: number, fizz: fizz, buzz: buzz )
 			);
 		}
 
-		[TestCase( 3 )]
-		[TestCase( 123 )]
-		[TestCase( 999999 )]
-		public void Calculate_IsOnlyDivisibleBy3_ReturnsFizz( int number ) {
+		[Test]
+		public void Calculate_IsOnlyDivisibleBy3_ReturnsFizz(
+			[Values( 3, 123, 999999 )] int number,
+			[Values( null, "cats" )] string fizz,
+			[Values( null, "dogs" )] string buzz
+		) {
 			Assert.AreEqual(
-				expected: "Fizz",
-				actual: m_fizzBuzzService.Calculate( number: number )
+				expected: fizz ?? "Fizz",
+				actual: RunCalculate( number: number, fizz: fizz, buzz: buzz )
 			);
 		}
 
-		[TestCase( 5 )]
-		[TestCase( 125 )]
-		[TestCase( 55555 )]
-		public void Calculate_IsOnlyDivisibleBy5_ReturnsBuzz( int number ) {
+		[Test]
+		public void Calculate_IsOnlyDivisibleBy5_ReturnsBuzz(
+			[Values( 5, 125, 55555 )] int number,
+			[Values( null, "cats" )] string fizz,
+			[Values( null, "dogs" )] string buzz
+		) {
 			Assert.AreEqual(
-				expected: "Buzz",
-				actual: m_fizzBuzzService.Calculate( number: number )
+				expected: buzz ?? "Buzz",
+				actual: RunCalculate( number: number, fizz: fizz, buzz: buzz )
 			);
 		}
 
-		[TestCase( 0 )]
-		[TestCase( 15 )]
-		[TestCase( 135 )]
-		public void Calculate_IsDivisibleBy3And5_ReturnsFizzBuzz( int number ) {
+		[Test]
+		public void Calculate_IsDivisibleBy3And5_ReturnsFizzBuzz(
+			[Values( 0, 15, 135 ) ] int number,
+			[Values( null, "cats" )] string fizz,
+			[Values( null, "dogs" )] string buzz
+		) {
+			string expected = "";
+			expected += fizz ?? "Fizz";
+			expected += buzz ?? "Buzz";
+
 			Assert.AreEqual(
-				expected: "FizzBuzz",
-				actual: m_fizzBuzzService.Calculate( number: number )
+				expected: expected,
+				actual: RunCalculate( number: number, fizz: fizz, buzz: buzz )
 			);
+		}
+
+		private string RunCalculate(
+			int number,
+			string fizz,
+			string buzz
+		) {
+			if( fizz == null && buzz == null ) {
+				return m_fizzBuzzService.Calculate( number: number );
+			}
+
+			if( fizz == null ) {
+				return m_fizzBuzzService.Calculate( number: number, buzz: buzz );
+			}
+
+			if( buzz == null ) {
+				return m_fizzBuzzService.Calculate( number: number, fizz: fizz );
+			}
+
+			return m_fizzBuzzService.Calculate( number: number, fizz: fizz, buzz: buzz );
 		}
 	}
 }
