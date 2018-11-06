@@ -42,9 +42,9 @@ namespace SmallCommitsWorkshopTests.Controllers {
 			foreach( User user in users ) {
 				m_usersContext.Users.Add( user );
 			}
-			await m_usersContext.SaveChangesAsync();
+			await m_usersContext.SaveChangesAsync().ConfigureAwait( false );
 
-			using( HttpResponseMessage response = await m_client.GetAsync( "/api/users" ) ) {
+			using( HttpResponseMessage response = await m_client.GetAsync( "/api/users" ).ConfigureAwait( false ) ) {
 				CollectionAssert.AreEquivalent(
 					users.ToDictionary(
 						user => user.Id,
@@ -53,7 +53,7 @@ namespace SmallCommitsWorkshopTests.Controllers {
 							{ "userName", user.UserName },
 						}
 					),
-					await response.Content.ReadAsJsonAsync<IDictionary<long, IDictionary<string, object>>>()
+					await response.Content.ReadAsJsonAsync<IDictionary<long, IDictionary<string, object>>>().ConfigureAwait( false )
 				);
 			}
 		}
