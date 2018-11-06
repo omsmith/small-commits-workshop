@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -61,6 +62,29 @@ namespace SmallCommitsWorkshopTests.Controllers {
 						}
 					),
 					await response.Content.ReadAsJsonAsync<IDictionary<long, IDictionary<string, object>>>().ConfigureAwait( false )
+				);
+			}
+		}
+
+		[Test]
+		public async Task Get_ReturnsUser() {
+			IEnumerable<User> users = await SetupUsers().ConfigureAwait( false );
+
+			User user = users.First();
+
+			using( HttpResponseMessage response = await m_client.GetAsync( $"/api/users/{user.Id}" ) ) {
+				Assert.AreEqual( response.StatusCode, HttpStatusCode.OK );
+				CollectionAssert.AreEquivalent(
+					new Dictionary<long, IDictionary<string, object>>( 2 ) {
+						{
+							user.Id,
+							new Dictionary<string, object>( 2 ) {
+								{ "id", user.Id },
+								{ "userName", user.UserName }
+							}
+						}
+					},
+					await response.Content.ReadAsJsonAsync<IDictionary<long, IDictionary<string, object>>>()
 				);
 			}
 		}

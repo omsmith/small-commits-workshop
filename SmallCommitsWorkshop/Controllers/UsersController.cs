@@ -26,6 +26,17 @@ namespace SmallCommitsWorkshop.Controllers {
 			return BuildUsersResult( users );
 		}
 
+		[HttpGet( "{userId}" )]
+		public async Task<ActionResult<IDictionary<long, User>>> Get( long userId ) {
+			User user = await m_usersContext.Users.FindAsync( userId ).ConfigureAwait( false );
+
+			if( user == null ) {
+				return NotFound();
+			}
+
+			return BuildUsersResult( new[] { user } );
+		}
+
 		private static Dictionary<long, User> BuildUsersResult(
 			IEnumerable<User> users
 		) {
