@@ -23,6 +23,12 @@ namespace SmallCommitsWorkshop.Controllers {
 		[HttpGet]
 		public async Task<ActionResult<IDictionary<long, User>>> GetAll() {
 			IEnumerable<User> users = await m_usersContext.Users.ToListAsync().ConfigureAwait( false );
+			return BuildUsersResult( users );
+		}
+
+		private static Dictionary<long, User> BuildUsersResult(
+			IEnumerable<User> users
+		) {
 			return users.ToDictionary( user => user.Id, user => user );
 		}
 	}
