@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace SmallCommitsWorkshop.Services {
 	public class FizzBuzzService : IFizzBuzzService {
@@ -7,6 +8,14 @@ namespace SmallCommitsWorkshop.Services {
 			string fizz,
 			string buzz
 		) {
+			if( string.IsNullOrWhiteSpace( fizz ) ) {
+				throw new ArgumentNullException( nameof( fizz ) );
+			}
+
+			if( string.IsNullOrWhiteSpace( buzz ) ) {
+				throw new ArgumentNullException( nameof( buzz ) );
+			}
+
 			StringBuilder response = new StringBuilder();
 
 			if( number % 3 == 0 ) {

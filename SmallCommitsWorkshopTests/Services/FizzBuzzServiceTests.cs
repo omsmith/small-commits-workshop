@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using SmallCommitsWorkshop.Services;
 
 namespace SmallCommitsWorkshopTests.Services {
@@ -56,6 +57,32 @@ namespace SmallCommitsWorkshopTests.Services {
 				expected: expected,
 				actual: RunCalculate( number: number, fizz: fizz, buzz: buzz )
 			);
+		}
+
+		[Test]
+		[TestCase( null )]
+		[TestCase( "" )]
+		[TestCase( " " )]
+		public void BadFizzThrows(
+			string fizz
+		) {
+			var e = Assert.Throws<ArgumentNullException>(
+				() => m_fizzBuzzService.Calculate( number: 1, fizz: fizz )
+			);
+			Assert.AreEqual( "fizz", e.ParamName );
+		}
+
+		[Test]
+		[TestCase( null )]
+		[TestCase( "" )]
+		[TestCase( " " )]
+		public void BadBuzzThrows(
+			string buzz
+		) {
+			var e = Assert.Throws<ArgumentNullException>(
+				() => m_fizzBuzzService.Calculate( number: 1, buzz: buzz )
+			);
+			Assert.AreEqual( "buzz", e.ParamName );
 		}
 
 		private string RunCalculate(
