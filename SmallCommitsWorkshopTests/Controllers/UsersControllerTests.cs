@@ -30,6 +30,7 @@ namespace SmallCommitsWorkshopTests.Controllers {
 			m_scope.Dispose();
 			m_client.Dispose();
 			m_factory.Dispose();
+			m_usersContext.Dispose();
 		}
 
 		[Test]
