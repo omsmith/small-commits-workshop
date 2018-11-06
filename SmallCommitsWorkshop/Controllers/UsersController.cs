@@ -34,5 +34,22 @@ namespace SmallCommitsWorkshop.Controllers {
 			}
 			return new Dictionary<long, User>( 1 ) { { user.Id, user } };
 		}
+
+		[HttpPost]
+		public async Task<ActionResult> CreateOrUpdate( [FromBody] User newUser ) {
+			User user = m_usersContext.Users.Find( newUser.Id );
+			ActionResult response;
+			if( user == null ) {
+				m_usersContext.Add( newUser );
+				response = Created( newUser.Id.ToString(), newUser );
+			} else {
+				user.UserName = newUser.UserName;
+				m_usersContext.Update( user );
+				response = NoContent();
+			}
+			
+			await m_usersContext.SaveChangesAsync();
+			return response;
+		}
 	}
 }

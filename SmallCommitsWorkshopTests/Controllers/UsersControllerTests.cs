@@ -76,6 +76,44 @@ namespace SmallCommitsWorkshopTests.Controllers {
 			}
 		}
 
+		[Test]
+		public async Task CreateOrUpdate_UserDoesNotExist_CreatesUser() {
+			User user = new User { Id = 12456L, UserName = "AnotherUser", IsActive = true };
+
+			CollectionAssert.DoesNotContain(
+				m_defaultUsers.Select( u => u.Id ),
+				user.Id
+			);
+
+			using( HttpResponseMessage response = await m_client.PostAsJsonAsync( "/api/users/", user ) ) {
+				Assert.AreEqual( HttpStatusCode.Created, response.StatusCode );
+			}
+
+			User actualUser = await m_usersContext.Users.FindAsync( user.Id );
+			Assert.NotNull( actualUser, "Could not find created user!" );
+			Assert.AreEqual( user.UserName, actualUser.UserName );
+			Assert.AreEqual( user.IsActive, actualUser.IsActive );
+		}
+
+		[Test]
+		public async Task CreateOrUpdate_UserExists_UpdatesUser() {
+			const string newUserName = "NewUserName";
+			User user = m_defaultUsers.First();
+			Assert.AreNotEqual( newUserName, user.UserName );
+
+			User newUserDetails = new User() { Id = user.Id, UserName = newUserName, IsActive = !user.IsActive };
+			using( HttpResponseMessage response = await m_client.PostAsJsonAsync( "/api/users/", newUserDetails ) ) {
+				Assert.AreEqual( HttpStatusCode.NoContent, response.StatusCode );
+			}
+
+			await m_usersContext.Entry( user ).ReloadAsync();
+			User actualUser = await m_usersContext.Users.FindAsync( user.Id );
+
+			Assert.NotNull( actualUser, "Could not find created user!" );
+			Assert.AreEqual( newUserDetails.UserName, actualUser.UserName );
+			Assert.AreEqual( user.IsActive, actualUser.IsActive );
+		}
+
 		private Task AddUsers( params User[] users ) {
 			m_usersContext.Users.AddRange( users );
 			return m_usersContext.SaveChangesAsync();
