@@ -12,6 +12,10 @@ using SmallCommitsWorkshopTests.Extensions;
 namespace SmallCommitsWorkshopTests.Controllers {
 	[TestFixture]
 	internal sealed class UsersControllerTests {
+
+		private static User USER_A = new User() { Id = 42, UserName = "JaneSmith" };
+		private static User USER_B = new User() { Id = 156, UserName = "JoeSmith" };
+
 		private WebApplicationFactory<Startup> m_factory;
 		private HttpClient m_client;
 		private IServiceScope m_scope;
@@ -33,17 +37,19 @@ namespace SmallCommitsWorkshopTests.Controllers {
 			m_usersContext.Dispose();
 		}
 
+		private async Task<IEnumerable<User>> SetupUsers( User[] users = null ) {
+			users = users ?? new User[] { USER_A, USER_B };
+
+			m_usersContext.Users.AddRange( users );
+
+			await m_usersContext.SaveChangesAsync().ConfigureAwait( false );
+
+			return users;
+		}
+
 		[Test]
 		public async Task GetAll_ReturnsUsers() {
-			User[] users = new User[] {
-				new User() { Id = 42, UserName = "JaneSmith" },
-				new User() { Id = 156, UserName = "JoeSmith" },
-			};
-
-			foreach( User user in users ) {
-				m_usersContext.Users.Add( user );
-			}
-			await m_usersContext.SaveChangesAsync().ConfigureAwait( false );
+			IEnumerable<User> users = await SetupUsers().ConfigureAwait( false );
 
 			using( HttpResponseMessage response = await m_client.GetAsync( "/api/users" ).ConfigureAwait( false ) ) {
 				CollectionAssert.AreEquivalent(
